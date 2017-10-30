@@ -1,6 +1,9 @@
 language: python
 python:
   - "2.7"
+env:
+  global:
+    - CC_TEST_REPORTER_ID=token
 before_install:
   - sudo apt-get install mongodb  
 # command to install dependencies
@@ -16,5 +19,6 @@ before_script:
 script:
   - ./run_python_tests.sh
 after_script:
+  -  coverage xml
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 #  - (if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi)
