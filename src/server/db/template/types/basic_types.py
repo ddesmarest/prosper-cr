@@ -74,6 +74,24 @@ class IntType(BasicType):
         return 0
 
 
+def validate_choice_type(choice):
+    if not (isinstance(choice, list) and len(choice) == 2
+            and isinstance(choice[0], int) and isinstance(choice[1], str)):
+        return False, "Each choice should be : [int,string]" + str(choice)
+    else:
+        return True, None
+
+
+def validate_choice_values(choice, keys, values, last_index):
+    if choice[0] in keys:
+        return False, str(choice) + " contains a duplicated index"
+    if choice[1] in values:
+        return False, str(choice) + " contains a duplicated value"
+    if choice[0] > last_index:
+        return False, str(choice) + " has an index greater than the last_index: " + str(last_index)
+    return True, None
+
+
 def validate_choices(choices, last_index):
     """
     Validator for choices. Example of valid choices:
@@ -82,15 +100,13 @@ def validate_choices(choices, last_index):
     keys = {}
     values = {}
     for choice in choices:
-        if not (isinstance(choice, list) and len(choice) == 2
-                and isinstance(choice[0], int) and isinstance(choice[1], str)):
-            return False, "Each choice should be : [int,string]" + str(choice)
-        if choice[0] in keys:
-            return False, str(choice) + " contains a duplicated index"
-        if choice[1] in values:
-            return False, str(choice) + " contains a duplicated value"
-        if choice[0] > last_index:
-            return False, str(choice) + " has an index greater than the last_index: " + str(last_index)
+        valid, message = validate_choice_type(choice)
+        if not valid:
+            return False, message
+        valid, message = validate_choice_values(
+            choice, keys, values, last_index)
+        if not valid:
+            return False, message
         keys[choice[0]] = None
         values[choice[1]] = None
     return True, ''
