@@ -3,4 +3,4 @@ coverage
 nose-cov
 coveralls
 codeclimate-test-reporter
-
+mongoengine
