@@ -19,7 +19,7 @@ before_script:
 script:
   - ./run_python_tests.sh
 after_script:
-  - codeclimate-test-reporter
+  # - codeclimate-test-reporter
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 #  - (if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi)
 after_success:
