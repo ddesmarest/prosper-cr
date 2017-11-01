@@ -1,11 +1,12 @@
 """
 This module defines the ProsperCR server
 """
-from flask import Flask
-from flask_restful import Resource
-from flask_restful import Api
 
+from flask_restful import Resource, Api
 from mongoengine import connect
+from flask import Flask
+
+from server.rest_api.workspace import Workspaces
 
 
 class ProsperCR(Flask):
@@ -25,6 +26,7 @@ class ProsperCR(Flask):
         "Initialize the routes"
         self.api_ = Api(self)
         self.api_.add_resource(ServerInfo, '/')
+        self.api_.add_resource(Workspaces, '/workspaces')
 
     def __init_db__(self):
         "Initialize the database according to the config parameters"

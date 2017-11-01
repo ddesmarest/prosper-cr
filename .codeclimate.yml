@@ -23,4 +23,4 @@ ratings:
   - "**.module"
   - "**.py"
 exclude_paths:
-  - "src/tests/"
+  - "src/server/tests/"

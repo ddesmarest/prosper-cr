@@ -1,5 +1,9 @@
 #!/bin/bash
 fullfile=`realpath $0`
 d=$(dirname $fullfile)
-export PYTHONPATH=$d/src
-nosetests --with-cov --cov src/server --cov-config=src/server/.coveragerc src/server $@
+PYTHONPATH=$d/src
+#nosetests  --processes=1 --process-restartworker --with-cov --cov src/server --cov-config=src/server/.coveragerc src/server $@
+nosetests  --processes=0 --with-cov --cov $d/src/server --cov-config=$d/src/server/.coveragerc $d/src/server $@
+result=$?
+mongo tools/list_db.js
+exit $result

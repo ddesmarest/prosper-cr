@@ -1,9 +1,11 @@
-""" 
+"""
 This module contains all class needed to create user defined fields used in the templates
 """
 import uuid
 import json
-from mongoengine import EmbeddedDocument, EmbeddedDocumentField, Document, ListField, StringField, DictField, UUIDField
+from mongoengine import (EmbeddedDocument, EmbeddedDocumentField,
+                        
+                        Document, ListField, StringField, DictField, UUIDField)
 from types import FACTORY
 
 
@@ -44,13 +46,15 @@ class UserField(EmbeddedDocument):
             self.configuration)
         assert is_valid, message
 
-    def to_json(self):
+    def to_dict(self):
         """
-        Convert the field into a json reprentation string
+        Convert the field into a dict reprentation compatible with json
         """
-        return '{"id":"%s","name":"%s","tooltip":"%s","container":"%s","configuration":%s}' % (
-            str(self.uuid), self.name, self.tooltip,
-            self.container, json.dumps(self.configuration))
+        return {"id": str(self.uuid),
+                "name": str(self.name),
+                "tooltip": str(self.tooltip),
+                "container": str(self.container),
+                "configuration": self.configuration}
 
 
 class UserFieldGroup(Document):
@@ -66,16 +70,18 @@ class UserFieldGroup(Document):
             field.validate_configuration()
         super(UserFieldGroup, self).save(arg, args)
 
-    def to_json(self):
+    def to_dict(self):
         """
-        Convert the group into a json reprentation string
+        Convert the group into a dict reprentation compatible with json
         """
         if self.tooltip is None:
             tooltip = ""
         else:
             tooltip = self.tooltip
-        s_field = []
+        fields = []
         for field in self.fields:
-            s_field.append(field.to_json())
-        fields = "[%s]" % (','.join(s_field))
-        return '{"id":"%s","name":"%s","tooltip":"%s","fields":%s}' % (str(self.id), self.name, tooltip, fields)
+            fields.append(field.to_dict())
+        return {"id": str(self.id),
+                "name": self.name,
+                "tooltip": tooltip,
+                "fields": fields}

@@ -2,3 +2,4 @@
 show_missing = True
 [run]
 omit = src/server/tests/*
+

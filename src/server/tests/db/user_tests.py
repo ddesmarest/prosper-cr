@@ -1,19 +1,25 @@
-from pymongo import MongoClient
-from mongoengine import *
-import datetime
-import pprint
+"""
+User tests
+"""
 import unittest
+import uuid
+from mongoengine import connect
 import server.db.user
-
-
+import server.tests
 class UserTests(unittest.TestCase):
+    """
+    UserTests
+    """
     def setUp(self):
-        self.db_ = connect('test_user')
+        self.db_name = server.tests.create_db(self.__class__.__name__)
 
     def tearDown(self):
-        self.db_.drop_database('test_user_field_group')
+        server.tests.drop_db(self.db_name)
 
     def test_create_user(self):
+        """
+        * Test user creation
+        """
         user = server.db.user.User(
             email='john@example.com', first_name='John', last_name='Doo').save()
         self.assertEquals(user.email, 'john@example.com')

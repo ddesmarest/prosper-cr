@@ -16,7 +16,7 @@ class BasicTypeTests(unittest.TestCase):
 
     def test_factory(self):
         """
-        Test all the feature for the type factory
+        * Test BasicType: all the feature for the type factory
         """
         basic_type = BasicType('dummy', 'Dummy')
         self.assertRaises(Exception, FACTORY.register_type, (IntType()))
@@ -45,13 +45,13 @@ class BasicTypeTests(unittest.TestCase):
 
     def test_choice(self):
         """
-        Test choice type
+        * Test choice type
         """
         choice_t = FACTORY.get_type('choice')
         is_valid, message = choice_t.validate_configuration(
             {'last_index': 0, 'choices': []})
         self.assertTrue(is_valid)
-        self.assertEquals('', message)
+        self.assertIsNone(message)
         is_valid, message = choice_t.validate_configuration(
             {'choices': []})
         self.assertFalse(is_valid)
@@ -60,6 +60,9 @@ class BasicTypeTests(unittest.TestCase):
         self.assertFalse(is_valid)
         is_valid, message = choice_t.validate_configuration(
             {'last_index': 0, 'choices': 0})
+        self.assertFalse(is_valid)
+        is_valid, message = choice_t.validate_configuration(
+            {'last_index': '', 'choices': []})
         self.assertFalse(is_valid)
         is_valid, message = choice_t.validate_configuration(
             {'last_index': 1, 'choices': [[0, 'A'], [1, 'B']]})
@@ -74,3 +77,6 @@ class BasicTypeTests(unittest.TestCase):
         is_valid, message = choice_t.validate_configuration(
             {'last_index': 0, 'choices': [[0, 'A'], [1, 'B']]})
         self.assertFalse(is_valid)
+
+if __name__ == '__main__':
+    unittest.main()

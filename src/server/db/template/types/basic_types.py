@@ -73,8 +73,10 @@ class IntType(BasicType):
     def create_instance(self):
         return 0
 
-
 def validate_choice_type(choice):
+    """Return bool, message
+    verify that all the object type in the choice are valid
+    """
     if not (isinstance(choice, list) and len(choice) == 2
             and isinstance(choice[0], int) and isinstance(choice[1], str)):
         return False, "Each choice should be : [int,string]" + str(choice)
@@ -83,6 +85,10 @@ def validate_choice_type(choice):
 
 
 def validate_choice_values(choice, keys, values, last_index):
+    """Return bool,message
+    verify that the key and the value of the choice are valid and not
+    duplicated
+    """
     if choice[0] in keys:
         return False, str(choice) + " contains a duplicated index"
     if choice[1] in values:
@@ -97,6 +103,8 @@ def validate_choices(choices, last_index):
     Validator for choices. Example of valid choices:
     [ [0,'Choice 1'],[1,'Choice 2'] ]
     """
+    if not isinstance(last_index,int):
+        return False, 'last_index should be an int'
     keys = {}
     values = {}
     for choice in choices:
@@ -109,7 +117,8 @@ def validate_choices(choices, last_index):
             return False, message
         keys[choice[0]] = None
         values[choice[1]] = None
-    return True, ''
+    return True, None
+
 
 
 class ChoiceType(BasicType):
