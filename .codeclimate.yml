@@ -23,7 +23,4 @@ ratings:
   - "**.module"
   - "**.py"
 exclude_paths:
-- "*/tests/test_*.py"
-- "*/tests/__init__.py"
-- "*/tests.py"
-- static/
+  - "src/tests/"
