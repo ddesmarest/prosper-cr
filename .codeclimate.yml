@@ -24,3 +24,4 @@ ratings:
   - "**.py"
 exclude_paths:
   - "src/server/tests/"
+  - "tools/"
