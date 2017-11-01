@@ -20,8 +20,9 @@ script:
   - ./run_python_tests.sh
 after_script:
   # - codeclimate-test-reporter
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  
 #  - (if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi)
 after_success:
   - coveralls
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT  --coverage-input-type coverage.py
   
