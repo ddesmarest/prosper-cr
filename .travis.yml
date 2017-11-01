@@ -5,7 +5,7 @@ env:
   global:
     - CC_TEST_REPORTER_ID=token
 before_install:
-  - sudo apt-get install mongodb realpath 
+  - sudo apt-get install mongodb realpath tree
 # command to install dependencies
 install:
   - pip install -r requirements.txt
