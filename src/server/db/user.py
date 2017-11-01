@@ -1,6 +1,7 @@
-from mongoengine import *
+from mongoengine import Document, EmailField,StringField
+
 
 class User(Document):
-    email = StringField(required=True)
-    first_name = StringField(max_length=50)
-    last_name = StringField(max_length=50)
+    email = EmailField(required=True, unique=True)
+    first_name = StringField()
+    last_name = StringField()
