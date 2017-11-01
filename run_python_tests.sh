@@ -7,7 +7,7 @@ export PYTHONPATH=src
 echo $PYTHONPATH
 tree
 #nosetests  --processes=1 --process-restartworker --with-cov --cov src/server --cov-config=src/server/.coveragerc src/server $@
-nosetests  --processes=0 --with-cov --cov $d/src/server --cov-config=$d/src/server/.coveragerc $d/src/server $@
+nosetests  --processes=0 --with-cov --cov src/server --cov-config=src/server/.coveragerc src/server $@
 result=$?
 mongo tools/list_db.js
 exit $result
