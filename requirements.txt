@@ -4,3 +4,4 @@ nose-cov
 coveralls
 codeclimate-test-reporter
 mongoengine
+flask-restful
