@@ -23,6 +23,6 @@ after_script:
   
 #  - (if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi)
 after_success:
-  - coveralls
+  #- coveralls
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT  --coverage-input-type coverage.py
   
