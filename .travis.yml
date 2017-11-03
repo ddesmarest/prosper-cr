@@ -15,15 +15,11 @@ before_script:
   - chmod +x ./cc-test-reporter
   - chmod +x ./run_python_tests_for_build.sh
   - ./cc-test-reporter before-build
-#  - (if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter before-build; fi)
-# command to run tests
+
 script:
   - ./run_python_tests_for_build.sh
-after_script:
-  # - codeclimate-test-reporter
-  
-#  - (if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi)
+
 after_success:
-  #- coveralls
-  - ./cc-test-reporter after-build -id f9b952354c7fc3cf9ec996048eefb15ca174ee8374d3f21372df41922443201e --exit-code $TRAVIS_TEST_RESULT  --coverage-input-type coverage.py
+  - coveralls --data_file=coverage.xml
+  - ./cc-test-reporter after-build --id f9b952354c7fc3cf9ec996048eefb15ca174ee8374d3f21372df41922443201e --exit-code $TRAVIS_TEST_RESULT  --coverage-input-type coverage.py
   
