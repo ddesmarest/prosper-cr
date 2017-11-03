@@ -32,3 +32,4 @@ class UserTests(unittest.TestCase):
         server.db.user.User(email='user2@domain.com').set_password('test2').save()
         self.check_password('user2@domain.com','test2',self.assertTrue )
         self.check_password('user2@domain.com','wrongpassword',self.assertFalse )
+        self.assertFalse(server.db.user.User(email='user3@domain.com').check_password('none'))
