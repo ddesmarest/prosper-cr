@@ -20,6 +20,7 @@ script:
   - ./run_python_tests_for_build.sh
 
 after_success:
-  - coveralls --data_file=coverage.xml
+  #- coveralls --data_file=coverage.xml
+  - coveralls --help
   - ./cc-test-reporter after-build --id f9b952354c7fc3cf9ec996048eefb15ca174ee8374d3f21372df41922443201e --exit-code $TRAVIS_TEST_RESULT  --coverage-input-type coverage.py
   
