@@ -8,7 +8,6 @@ from flask import Flask
 
 from server.rest_api.workspace import Workspaces
 
-
 class ProsperCR(Flask):
     """
     ProsperCR REST API server

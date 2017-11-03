@@ -15,15 +15,20 @@ class UserTests(unittest.TestCase):
 
     def tearDown(self):
         server.tests.drop_db(self.db_name)
-
+    def check_password(self, username, password, assert_function):
+        user_1 = server.db.user.User.objects(email=username)
+        self.assertEquals(1, len(user_1))
+        assert_function(user_1[0].check_password(password))
+    
     def test_create_user(self):
         """
         * Test user creation
         """
-        user = server.db.user.User(
-            email='john@example.com', first_name='John', last_name='Doo').save()
-        self.assertEquals(user.email, 'john@example.com')
-        server.db.user.User(email="user1@domain.com").save()
-        user_1 = server.db.user.User.objects(email="user1@domain.com")
-        self.assertEquals(1, len(user_1))
-       
+        user = server.db.user.User(email='john@domain.com')
+        user.set_password('my_password')
+        self.assertTrue(user.check_password('my_password'))
+        user.save()
+        self.check_password('john@domain.com','my_password',self.assertTrue )
+        server.db.user.User(email='user2@domain.com').set_password('test2').save()
+        self.check_password('user2@domain.com','test2',self.assertTrue )
+        self.check_password('user2@domain.com','wrongpassword',self.assertFalse )
