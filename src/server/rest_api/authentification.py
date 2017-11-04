@@ -3,13 +3,14 @@ This module contains all the handler related to the login/logout
 """
 import jwt
 import datetime
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
 from flask_httpauth import HTTPBasicAuth
 from flask import g
 from server.db.user import User
 AUTH = HTTPBasicAuth()
 
 AUTH.secret_key = 'prosper-cr-is-nice'
+
 
 def get_auth_token_for_id(id, secret_key, validity_in_minute, validity_in_second=0):
     """
@@ -19,7 +20,7 @@ def get_auth_token_for_id(id, secret_key, validity_in_minute, validity_in_second
     payload = {
         'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, minutes=validity_in_minute, seconds=validity_in_second),
         'iat': datetime.datetime.utcnow(),
-        'sub': id
+        'id': id
     }
     return jwt.encode(
         payload,
@@ -35,7 +36,7 @@ def get_id_from_token(auth_token, secret_key):
     """
     try:
         payload = jwt.decode(auth_token, secret_key)
-        return payload['sub']
+        return payload['id']
     except:
         return None
 
@@ -43,11 +44,11 @@ def get_id_from_token(auth_token, secret_key):
 @AUTH.verify_password
 def verify_password(username, password):
     id = get_id_from_token(username, AUTH.secret_key)
-    if not id is None:
-        g.user = User(id=id)
+    if password != 'unused' or id is None:
+        g.user = None
     else:
-        users = User.objects(email=username)
-        if len(users) == 0 or not users[0].check_password(password):
+        users = User.objects(id=id)
+        if len(users) == 0:
             g.user = None
         else:
             g.user = users[0]
@@ -58,9 +59,26 @@ class Login(Resource):
     """
     /login handler
     """
-    @AUTH.login_required
+
     def post(self):
         """
         Verify the user account
         """
-        return {'id': get_auth_token_for_id(str(g.user.id),AUTH.secret_key, 60)}
+        parser = reqparse.RequestParser()
+        parser.add_argument('email', required=True,
+                            help="Workspace name missing", location='json')
+        parser.add_argument('password', required=True,
+                            help="Workspace name missing", location='json')
+        args = parser.parse_args()
+        users = User.objects(email=args['email'])
+        if len(users) == 0 or not users[0].check_password(args['password']):
+            return {}, 401
+        user = users[0]
+        return {'id': get_auth_token_for_id(str(user.id), AUTH.secret_key, 60)}
+
+    @AUTH.login_required
+    def get(self):
+        """
+        Update the id to get new timeout
+        """
+        return {'id': get_auth_token_for_id(str(g.user.id), AUTH.secret_key, 60)}
