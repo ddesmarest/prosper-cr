@@ -16,33 +16,32 @@ class WorkspacesTests(BaseTestCase, unittest.TestCase):
         """
         * Test GET /workspaces
         """
-        response = self.app.get('/workspaces')
+        response = self.get('/workspaces')
         self.assertEquals('401 UNAUTHORIZED', response.status)
-        response = self.app.get(
-            '/workspaces', headers=self.create_authentication_header(self.USER_EMAIL, self.USER_PASSWORD))
+        self.login()
+        response = self.get('/workspaces')
         data = json.loads(response.data)
         self.assertEquals('200 OK', response.status)
         self.assertEquals(1, len(data))
         self.assertEquals('Workspace for user 1', data[0]['name'])
+        self.logout()
+        response = self.get('/workspaces')
+        self.assertEquals('401 UNAUTHORIZED', response.status)
 
     def test_post(self):
         """
         * Test POST /workspaces
         """
-        response = self.app.post('/workspaces')
+        response = self.post('/workspaces')
         self.assertEquals('401 UNAUTHORIZED', response.status)
-        header = self.create_authentication_header(
-            self.USER_EMAIL, self.USER_PASSWORD)
-        response = self.app.post(
-            '/workspaces', headers=header,
-            data=json.dumps(dict(name='New Workspace')),
-            content_type='application/json')
+        self.login()
+        response = self.post('/workspaces', data_dict = dict(name='New Workspace'))
         self.assertEquals('200 OK', response.status)
         data = json.loads(response.data)
         self.assertEquals('New Workspace', data['name'])
         self.assertIsNotNone(data['id'])
         self.assertNotEquals('', data['id'])
-        response = self.app.get('/workspaces', headers=header)
+        response = self.get('/workspaces')
         data = json.loads(response.data)
         self.assertEquals('200 OK', response.status)
         self.assertEquals(2, len(data))

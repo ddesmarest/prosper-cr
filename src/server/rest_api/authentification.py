@@ -9,8 +9,9 @@ from flask import g
 from server.db.user import User
 AUTH = HTTPBasicAuth()
 
+AUTH.secret_key = 'prosper-cr-is-nice'
 
-def get_auth_token(id, secret_key, validity_in_minute, validity_in_second=0):
+def get_auth_token_for_id(id, secret_key, validity_in_minute, validity_in_second=0):
     """
     Generates the Auth Token
     :return: string
@@ -34,14 +35,14 @@ def get_id_from_token(auth_token, secret_key):
     """
     try:
         payload = jwt.decode(auth_token, secret_key)
-        return True, payload['sub']
+        return payload['sub']
     except:
         return None
 
 
 @AUTH.verify_password
 def verify_password(username, password):
-    id = get_id_from_token(username, 'prosper-cr-is-nice')
+    id = get_id_from_token(username, AUTH.secret_key)
     if not id is None:
         g.user = User(id=id)
     else:
@@ -57,10 +58,9 @@ class Login(Resource):
     """
     /login handler
     """
-
+    @AUTH.login_required
     def post(self):
         """
         Verify the user account
         """
-        get_auth_token()
-        return {'success': True}
+        return {'id': get_auth_token_for_id(str(g.user.id),AUTH.secret_key, 60)}

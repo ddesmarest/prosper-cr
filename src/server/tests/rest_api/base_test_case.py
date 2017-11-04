@@ -4,6 +4,7 @@ This module contain all the classes that are needed to the REST API tests
 import ConfigParser
 import uuid
 import base64
+import json
 
 from mongoengine import register_connection
 from mongoengine.context_managers import switch_db
@@ -19,8 +20,9 @@ class BaseTestCase(object):
     the tests
     """
 
-    USER_EMAIL='user1@testdomain.org'
-    USER_PASSWORD='test'
+    USER_EMAIL = 'user1@testdomain.org'
+    USER_PASSWORD = 'test'
+
     def init_server(self):
         """
         create a configuration with a test database and start the server
@@ -31,6 +33,7 @@ class BaseTestCase(object):
         config.set('db', 'name', self.TEST_DATABASE)
         self.server = ProsperCR(config)
         self.app = self.server.test_client()
+        self.login_id = None
 
     def drop_db(self):
         """
@@ -75,3 +78,50 @@ class BaseTestCase(object):
         return {
             'Authorization': 'Basic ' + base64.b64encode(username + ":" + password)
         }
+
+    def get_full_url(self, url_tail):
+        """Return a full url by adding prefix '/api'        
+        """
+        return url_tail
+
+    def add_login_header(self, **kwargs):
+        if self.login_id is not None:
+            if 'headers' in kwargs:
+                kwargs['headers']['Authorization'] = 'Basic ' + \
+                    base64.b64encode(self.login_id + ":unsed")
+            else:
+                kwargs['headers'] = {'Authorization': 'Basic ' +
+                                     base64.b64encode(self.login_id + ":unsed")}
+        return kwargs
+
+    def get(self, url_tail, *arg, **kwargs):
+        """Return response to the HTTP GET method
+        """
+        kwargs = self.add_login_header(**kwargs)
+        return self.app.get(self.get_full_url(url_tail), *arg, **kwargs)
+
+    def post(self, url_tail, *arg, **kwargs):
+        """Return response to the HTTP POST method
+        """
+        kwargs = self.add_login_header(**kwargs)
+        if 'data_dict' in kwargs:
+            kwargs['data'] = json.dumps(kwargs['data_dict'])
+            kwargs['content_type'] = 'application/json'
+            del kwargs['data_dict']
+        return self.app.post(self.get_full_url(url_tail), *arg, **kwargs)
+
+    def login(self):
+        """Login using the test USER_MAIL/USER_PASSWORD and
+        store the id for the next get/post/put operation
+        """
+        response = self.app.post(
+            '/login', headers=self.create_authentication_header(self.USER_EMAIL, self.USER_PASSWORD))
+        self.assertEquals('200 OK', response.status)
+        data = json.loads(response.data)
+        self.assertIsNotNone(data['id'])
+        self.login_id = data['id']
+
+    def logout(self):
+        """Clear then login_id
+        """
+        self.login_id = None
