@@ -36,3 +36,12 @@ class User(Document):
             return False
         algo, salt, hsh = self.password.split('$')
         return hsh == self.get_hexdigest(algo, salt, raw_password)
+
+    def to_dict(self):
+        """
+        Convert the workspace into a dict reprentation compatible with json
+        """
+        return {'id': str(self.id),
+                'email': str(self.email),
+                'first_name': str(self.first_name),
+                'last_name': str(self.last_name)}

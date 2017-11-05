@@ -24,10 +24,14 @@ class UserTests(unittest.TestCase):
         """
         * Test user creation
         """
-        user = server.db.user.User(email='john@domain.com')
+        user = server.db.user.User(email='john@domain.com',first_name='John', last_name='Doe')
         user.set_password('my_password')
         self.assertTrue(user.check_password('my_password'))
         user.save()
+        user_dict = user.to_dict()
+        self.assertEquals('John', user_dict['first_name'])
+        self.assertEquals('Doe', user_dict['last_name'])
+        self.assertEquals('john@domain.com', user_dict['email'])
         self.check_password('john@domain.com','my_password',self.assertTrue )
         server.db.user.User(email='user2@domain.com').set_password('test2').save()
         self.check_password('user2@domain.com','test2',self.assertTrue )

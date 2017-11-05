@@ -20,4 +20,5 @@ class Workspace(Document):
         Convert the workspace into a dict reprentation compatible with json
         """
         return {'id': str(self.id),
-                'name': str(self.name)}
+                'name': str(self.name),
+                'field_groups': [{'id': str(x.id), 'name': x.name} for x in self.field_groups]}

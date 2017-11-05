@@ -55,10 +55,31 @@ def verify_password(username, password):
     return g.user is not None
 
 
-class Login(Resource):
+class LoginAPI(Resource):
     """
     /login handler
     """
+
+    def get_timeout(self, args):
+        """Return the timeout contained in args if any, default value otherwise
+        """
+        timeout = args['timeout']
+        if timeout is None:
+            timeout = 60
+
+        return timeout
+
+    def add_common_parameters(self, parser):
+        """Add common parameter to the parser
+        """
+        parser.add_argument('timeout', required=False, type=int,
+                            help="timeout should be an interger representing minutes", location='json')
+
+    def build_result(self, user, args):
+        """Return the api data
+        """
+        return {'token': get_auth_token_for_id(str(user.id), AUTH.secret_key, self.get_timeout(args)),
+                'user': user.to_dict()}
 
     def post(self):
         """
@@ -66,19 +87,23 @@ class Login(Resource):
         """
         parser = reqparse.RequestParser()
         parser.add_argument('email', required=True,
-                            help="Workspace name missing", location='json')
+                            help="user email missing", location='json')
         parser.add_argument('password', required=True,
-                            help="Workspace name missing", location='json')
+                            help="user password missing", location='json')
+        self.add_common_parameters(parser)
         args = parser.parse_args()
         users = User.objects(email=args['email'])
         if len(users) == 0 or not users[0].check_password(args['password']):
             return {}, 401
         user = users[0]
-        return {'id': get_auth_token_for_id(str(user.id), AUTH.secret_key, 60)}
+        return self.build_result(user, args)
 
     @AUTH.login_required
     def get(self):
         """
         Update the id to get new timeout
         """
-        return {'id': get_auth_token_for_id(str(g.user.id), AUTH.secret_key, 60)}
+        parser = reqparse.RequestParser()
+        self.add_common_parameters(parser)
+        args = parser.parse_args()
+        return self.build_result(g.user, args)

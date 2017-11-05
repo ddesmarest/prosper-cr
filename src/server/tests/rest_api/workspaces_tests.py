@@ -3,7 +3,7 @@ import unittest
 from server.tests.rest_api.base_test_case import BaseTestCase
 
 
-class WorkspacesTests(BaseTestCase, unittest.TestCase):
+class WorkspacesAPITests(BaseTestCase, unittest.TestCase):
     def setUp(self):
         self.init_server()
         self.create_users()
@@ -36,7 +36,7 @@ class WorkspacesTests(BaseTestCase, unittest.TestCase):
         self.assertEquals('401 UNAUTHORIZED', response.status)
         self.login()
         response = self.post('/workspaces', data_dict = dict(name='New Workspace'))
-        self.assertEquals('200 OK', response.status)
+        self.assertEquals('201 CREATED', response.status)
         data = json.loads(response.data)
         self.assertEquals('New Workspace', data['name'])
         self.assertIsNotNone(data['id'])
