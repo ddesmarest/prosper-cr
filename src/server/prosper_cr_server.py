@@ -6,8 +6,8 @@ from flask_restful import Resource, Api
 from mongoengine import connect
 from flask import Flask
 
-from server.rest_api.workspace import Workspaces
-
+from server.rest_api.workspace import WorkspacesAPI, WorkspaceAPI
+from server.rest_api.authentification import LoginAPI
 
 class ProsperCR(Flask):
     """
@@ -25,8 +25,11 @@ class ProsperCR(Flask):
     def __init_routes__(self):
         "Initialize the routes"
         self.api_ = Api(self)
-        self.api_.add_resource(ServerInfo, '/')
-        self.api_.add_resource(Workspaces, '/workspaces')
+        self.api_.add_resource(ServerInfoAPI, '/api')
+        self.api_.add_resource(WorkspacesAPI, '/api/workspaces')
+        self.api_.add_resource(WorkspaceAPI, '/api/workspaces/<workspace_id>')
+        self.api_.add_resource(LoginAPI, '/api/login')
+
 
     def __init_db__(self):
         "Initialize the database according to the config parameters"
@@ -37,7 +40,7 @@ class ProsperCR(Flask):
         return self.db_
 
 
-class ServerInfo(Resource):
+class ServerInfoAPI(Resource):
     """
     Root url handler
     """

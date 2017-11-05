@@ -1,9 +1,9 @@
-from server.tests.rest_api.base_test_case import BaseTestCase
 import json
 import unittest
+from server.tests.rest_api.base_test_case import BaseTestCase
 
 
-class WorkspacesTests(BaseTestCase, unittest.TestCase):
+class WorkspacesAPITests(BaseTestCase, unittest.TestCase):
     def setUp(self):
         self.init_server()
         self.create_users()
@@ -16,9 +16,32 @@ class WorkspacesTests(BaseTestCase, unittest.TestCase):
         """
         * Test GET /workspaces
         """
-        rv = self.app.get('/workspaces')
-        data = json.loads(rv.data)
-        #print data
-        #self.assertEquals('prosper-cr', data['name'])
-        #self.assertEquals('0.1', data['version'])
-        #assert b'No entries here so far' in rv.data
+        response = self.get('/workspaces')
+        self.assertEquals('401 UNAUTHORIZED', response.status)
+        self.login()
+        response = self.get('/workspaces')
+        self.assertEquals('200 OK', response.status)
+        data = json.loads(response.data)
+        self.assertEquals(1, len(data))
+        self.assertEquals('Workspace for user 1', data[0]['name'])
+        self.logout()
+        response = self.get('/workspaces')
+        self.assertEquals('401 UNAUTHORIZED', response.status)
+
+    def test_post(self):
+        """
+        * Test POST /workspaces
+        """
+        response = self.post('/workspaces')
+        self.assertEquals('401 UNAUTHORIZED', response.status)
+        self.login()
+        response = self.post('/workspaces', data_dict = dict(name='New Workspace'))
+        self.assertEquals('201 CREATED', response.status)
+        data = json.loads(response.data)
+        self.assertEquals('New Workspace', data['name'])
+        self.assertIsNotNone(data['id'])
+        self.assertNotEquals('', data['id'])
+        response = self.get('/workspaces')
+        data = json.loads(response.data)
+        self.assertEquals('200 OK', response.status)
+        self.assertEquals(2, len(data))

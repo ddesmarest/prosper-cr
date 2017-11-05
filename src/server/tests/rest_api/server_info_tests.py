@@ -14,7 +14,7 @@ class ServerInfoTests(BaseTestCase, unittest.TestCase):
         """
         * Test GET /
         """
-        rv = self.app.get('/')
+        rv = self.app.get('/api')
         data = json.loads(rv.data)
         self.assertEquals('prosper-cr', data['name'])
         self.assertEquals('0.1', data['version'])

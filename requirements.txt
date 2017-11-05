@@ -5,3 +5,5 @@ coveralls
 codeclimate-test-reporter
 mongoengine
 flask-restful
+flask-httpauth
+PyJWT
