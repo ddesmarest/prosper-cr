@@ -3,6 +3,7 @@ import unittest
 import time
 
 from server.tests.rest_api.base_test_case import BaseTestCase
+from server.db.user import User
 
 
 class LoginTests(BaseTestCase, unittest.TestCase):
@@ -38,3 +39,8 @@ class LoginTests(BaseTestCase, unittest.TestCase):
         data = json.loads(response.data)
         self.assertIsNotNone(data['id'])
         self.assertNotEquals(old_id, data['id'])
+        users = User.objects(email=self.USER_EMAIL)
+        users[0].delete()
+        response = self.get('/login') # Verify that after user deletion, id is not valid anymore
+        self.assertEquals('401 UNAUTHORIZED', response.status)
+        
