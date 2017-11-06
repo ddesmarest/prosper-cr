@@ -1,8 +1,9 @@
 """
 This module contains all the handler related to the login/logout
 """
-import jwt
 import datetime
+import base64
+import jwt
 from flask_restful import Resource, reqparse
 from flask_httpauth import HTTPBasicAuth
 from flask import g
@@ -93,7 +94,8 @@ class LoginAPI(Resource):
         self.add_common_parameters(parser)
         args = parser.parse_args()
         users = User.objects(email=args['email'])
-        if len(users) == 0 or not users[0].check_password(args['password']):
+        password = base64.decodestring(args['password'])
+        if len(users) == 0 or not users[0].check_password(password):
             return {}, 401
         user = users[0]
         return self.build_result(user, args)

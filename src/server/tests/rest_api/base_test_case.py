@@ -80,7 +80,7 @@ class BaseTestCase(object):
         }
 
     def get_full_url(self, url_tail):
-        """Return a full url by adding prefix '/api'        
+        """Return a full url by adding prefix '/api'
         """
         return '/api' + url_tail
 
@@ -127,7 +127,7 @@ class BaseTestCase(object):
         self.login_token = None
         self.login_user = None
         response = self.post(
-            '/login', data_dict=dict(email=self.USER_EMAIL, password=self.USER_PASSWORD))
+            '/login', data_dict=dict(email=self.USER_EMAIL, password=base64.encodestring(self.USER_PASSWORD)))
         self.assertEquals('200 OK', response.status)
         data = json.loads(response.data)
         self.assertIsNotNone(data['token'])

@@ -1,4 +1,8 @@
+"""
+Tests related to authentification
+"""
 import json
+import base64
 import unittest
 import time
 
@@ -20,9 +24,11 @@ class LoginTests(BaseTestCase, unittest.TestCase):
         """
         response = self.post('/login')
         self.assertEquals('400 BAD REQUEST', response.status)
-        response = self.post('/login',data_dict=dict(email=self.USER_EMAIL, password='dummy'))        
+        response = self.post(
+            '/login', data_dict=dict(email=self.USER_EMAIL, password=base64.encodestring('dummy')))
         self.assertEquals('401 UNAUTHORIZED', response.status)
-        response = self.post('/login',data_dict=dict(email=self.USER_EMAIL, password=self.USER_PASSWORD))        
+        response = self.post(
+            '/login', data_dict=dict(email=self.USER_EMAIL, password=base64.encodestring(self.USER_PASSWORD)))
         self.assertEquals('200 OK', response.status)
         data = json.loads(response.data)
         self.assertIsNotNone(data['token'])
@@ -36,7 +42,7 @@ class LoginTests(BaseTestCase, unittest.TestCase):
         old_token = self.login_token
         old_user_id = self.login_user['id']
         self.assertIsNotNone(old_user_id)
-        time.sleep(1.1) # sleep 1.1 second to change the time stamp of the id
+        time.sleep(1.1)  # sleep 1.1 second to change the time stamp of the id
         response = self.get('/login')
         self.assertEquals('200 OK', response.status)
         data = json.loads(response.data)
@@ -46,6 +52,6 @@ class LoginTests(BaseTestCase, unittest.TestCase):
         self.assertEquals(old_user_id, data['user']['id'])
         users = User.objects(email=self.USER_EMAIL)
         users[0].delete()
-        response = self.get('/login') # Verify that after user deletion, id is not valid anymore
+        # Verify that after user deletion, id is not valid anymore
+        response = self.get('/login')
         self.assertEquals('401 UNAUTHORIZED', response.status)
-        

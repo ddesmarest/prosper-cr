@@ -3,6 +3,7 @@ This module defines the ProsperCR server
 """
 
 from flask_restful import Resource, Api
+from flask_cors import CORS
 from mongoengine import connect
 from flask import Flask
 
@@ -21,6 +22,7 @@ class ProsperCR(Flask):
         self.config_ = config
         self.__init_db__()
         self.__init_routes__()
+        self.cors = CORS(self, resources={r"/*": {"origins": "*"}})
 
     def __init_routes__(self):
         "Initialize the routes"
