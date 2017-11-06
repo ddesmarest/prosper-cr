@@ -57,12 +57,16 @@ class WorkspaceAPITests(BaseTestCase, unittest.TestCase):
         self.assertEquals('400 BAD REQUEST', response.status)
         data = json.loads(response.data)
         self.assertNotEquals('', data['message'])
+        new_name = 'New workspace name'
+        response = self.put('/workspaces/12315', data_dict={'name':new_name})
+        self.assertEquals('400 BAD REQUEST', response.status)
+        data = json.loads(response.data)
+        self.assertNotEquals('', data['message'])
         users = User.objects(id=self.login_user['id'])
         self.assertEquals(1, len(users))
         workspaces = Workspace.objects(users=users[0])
         self.assertEquals(1, len(workspaces))
         workspace = workspaces[0]
-        new_name = 'New workspace name'
         response = self.put('/workspaces/'+ str(workspace.id), data_dict={'name':new_name})
         self.assertEquals('200 OK', response.status)
         data = json.loads(response.data)
