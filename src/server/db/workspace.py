@@ -15,10 +15,15 @@ class Workspace(Document):
     field_groups = ListField(ReferenceField(UserFieldGroup))
     users = ListField(ReferenceField(User))
 
-    def to_dict(self):
+    def to_dict(self, recursive):
         """
         Convert the workspace into a dict reprentation compatible with json
         """
+        if recursive:
+            field_groups = [x.to_dict() for x in self.field_groups]
+        else:
+            field_groups = [{'id': str(x.id), 'name': x.name}
+                            for x in self.field_groups]
         return {'id': str(self.id),
                 'name': str(self.name),
-                'field_groups': [{'id': str(x.id), 'name': x.name} for x in self.field_groups]}
+                'field_groups': field_groups}

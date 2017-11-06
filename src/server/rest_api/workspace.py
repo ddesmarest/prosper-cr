@@ -5,6 +5,7 @@ from flask_restful import Resource, reqparse
 from flask import g, request
 from server.db.workspace import Workspace
 from server.rest_api.authentification import AUTH
+from server.rest_api import create_error_data
 
 
 class WorkspacesAPI(Resource):
@@ -18,7 +19,7 @@ class WorkspacesAPI(Resource):
         """
         workspaces = []
         for workspace in Workspace.objects(users=g.user):
-            workspaces.append(workspace.to_dict())
+            workspaces.append(workspace.to_dict(False))
         return workspaces
 
     @AUTH.login_required
@@ -33,7 +34,7 @@ class WorkspacesAPI(Resource):
         new_workspace = Workspace(name=args['name'])
         new_workspace.users = [g.user]
         new_workspace.save()
-        return new_workspace.to_dict(), 201
+        return new_workspace.to_dict(False), 201
 
 
 class WorkspaceAPI(Resource):
@@ -45,29 +46,32 @@ class WorkspaceAPI(Resource):
         """
         Returns a workspace
         """
+        parser = reqparse.RequestParser()
+        parser.add_argument('recursive',type=bool,default=False)
+        args = parser.parse_args()
         try:
             workspace = Workspace.objects(users=g.user, id=workspace_id)[0]
-            return workspace.to_dict()
+            return workspace.to_dict(args['recursive'])
         except Exception as e:
-            return {'message': 'Workspace cannot be found for user ' + g.user.email,
-                    'error': e.message}, 400
+            return create_error_data('Workspace cannot be found for user ' + g.user.email, e), 400
 
     @AUTH.login_required
     def put(self, workspace_id):
         """
         Update a workspace
         """
+        parser = reqparse.RequestParser()
+        parser.add_argument('name', required=True,
+                            help="Workspace name missing", location='json')
+        args = parser.parse_args()
+
         try:
-            parser = reqparse.RequestParser()
-            parser.add_argument('name', required=True,
-                                help="Workspace name missing", location='json')
-            args = parser.parse_args()
             new_name = args['name']
             workspace = Workspace.objects(users=g.user, id=workspace_id)[0]
             if workspace.name != new_name:
                 workspace.update(set__name=new_name)
                 workspace.reload()
-            return workspace.to_dict()
+            return workspace.to_dict(False)
         except Exception as e:
-            return {'message': 'Workspace ' + workspace_id + ' for user ' + g.user.email + 'cannot be updated',
-                    'error': e.message}, 400
+            return create_error_data('Workspace ' + workspace_id + ' for user ' + g.user.email + 'cannot be updated', e), 400
+            

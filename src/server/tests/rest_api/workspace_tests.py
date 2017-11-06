@@ -37,6 +37,11 @@ class WorkspaceAPITests(BaseTestCase, unittest.TestCase):
         self.assertEquals(data['id'], str(workspace.id))
         self.assertEquals(1,len(data['field_groups']))
         self.assertEquals('Group 1',data['field_groups'][0]['name'])
+        response = self.get('/workspaces/'+ str(workspace.id)+'?recursive=true')
+        self.assertEquals('200 OK', response.status)
+        groups = json.loads(response.data)['field_groups']
+        self.assertEquals(len(groups),len(data['field_groups']))
+        self.assertNotEquals(groups[0],data['field_groups'][0])
         self.logout()
         response = self.get('/workspaces/'+str(workspace.id))
         self.assertEquals('401 UNAUTHORIZED', response.status)
