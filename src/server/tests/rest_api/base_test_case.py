@@ -21,6 +21,8 @@ class BaseTestCase(object):
     """
 
     USER_EMAIL = 'user1@testdomain.org'
+    USER_FIRST_NAME = 'John'
+    USER_LAST_NAME = 'Doe'
     USER_PASSWORD = 'test'
 
     def init_server(self):
@@ -51,7 +53,7 @@ class BaseTestCase(object):
         self.drop_db()
 
     def create_users(self):
-        User(email=self.USER_EMAIL).set_password(self.USER_PASSWORD).save()
+        User(email=self.USER_EMAIL, first_name=self.USER_FIRST_NAME, last_name=self.USER_LAST_NAME).set_password(self.USER_PASSWORD).save()
         User(email='user2@testdomain.org').set_password('test2').save()
 
     def create_workspaces(self):

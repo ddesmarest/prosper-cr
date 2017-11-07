@@ -1,0 +1,59 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-10 ">
+      <form class="form-horizontal">
+        <fieldset>
+          <!-- Form Name -->
+          <legend>Edit your profil</legend>
+          <!-- Text input-->
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="First name">First name</label>
+            <div class="col-md-4">
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <i class="fa fa-user">
+                  </i>
+                </div>
+                <input id="Name (Full name)" [(ngModel)]="user.first_name" name="first_name" type="text" placeholder="First name"
+                  class="form-control input-md">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="Last name">Last name</label>
+            <div class="col-md-4">
+              <div class="input-group">
+                <div class="input-group-addon">
+                  <i class="fa fa-user">
+                  </i>
+                </div>
+                <input id="Name (Full name)" [(ngModel)]="user.last_name" name="last_name" type="text" placeholder="Last name"
+                  class="form-control input-md">
+              </div>
+            </div>
+          </div>
+
+          <!-- File Button -->
+          <!-- 
+          <div class="form-group">
+            <label class="col-md-4 control-label" for="Upload photo">Upload photo</label>
+            <div class="col-md-4">
+              <input id="Upload photo" name="Upload photo" class="input-file" type="file">
+            </div>
+          </div>
+        -->
+        </fieldset>
+        <div class="form-group">
+          <label class="col-md-4 control-label"></label>
+          <div class="col-md-4">
+            <a (click)="save()"  class="btn btn-success">
+              <!-- span class="glyphicon glyphicon-thumbs-up"></span --> Submit</a>
+            <a (click)="reset()" class="btn btn-danger" value="">
+              <!-- span class="glyphicon glyphicon-remove-sign"></span --> Reset</a>
+
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -7,7 +7,7 @@ import { AuthentificationService } from '../../services/authentification.service
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  email: string = 'ddesmarest@gmail.com';
+  email: string;
   password: string;
   constructor(private authService: AuthentificationService) { }
 

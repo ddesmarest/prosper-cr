@@ -9,6 +9,7 @@ from flask import Flask
 
 from server.rest_api.workspace import WorkspacesAPI, WorkspaceAPI
 from server.rest_api.authentification import LoginAPI
+from server.rest_api.user import UserAPI
 
 class ProsperCR(Flask):
     """
@@ -31,7 +32,7 @@ class ProsperCR(Flask):
         self.api_.add_resource(WorkspacesAPI, '/api/workspaces')
         self.api_.add_resource(WorkspaceAPI, '/api/workspaces/<workspace_id>')
         self.api_.add_resource(LoginAPI, '/api/login')
-
+        self.api_.add_resource(UserAPI, '/api/user')
 
     def __init_db__(self):
         "Initialize the database according to the config parameters"
