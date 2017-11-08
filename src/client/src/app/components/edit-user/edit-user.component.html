@@ -4,30 +4,30 @@
       <form class="form-horizontal">
         <fieldset>
           <!-- Form Name -->
-          <legend>Edit your profil</legend>
+          <legend i18n>Edit your profil</legend>
           <!-- Text input-->
           <div class="form-group">
-            <label class="col-md-4 control-label" for="First name">First name</label>
+            <label class="col-md-4 control-label" for="First name" i18n>First name</label>
             <div class="col-md-4">
               <div class="input-group">
                 <div class="input-group-addon">
                   <i class="fa fa-user">
                   </i>
                 </div>
-                <input id="Name (Full name)" [(ngModel)]="user.first_name" name="first_name" type="text" placeholder="First name"
+                <input id="Name (Full name)" [(ngModel)]="user.first_name" name="first_name" type="text" i18n-placeholder placeholder="First name"
                   class="form-control input-md">
               </div>
             </div>
           </div>
           <div class="form-group">
-            <label class="col-md-4 control-label" for="Last name">Last name</label>
+            <label class="col-md-4 control-label" for="Last name" i18n>Last name</label>
             <div class="col-md-4">
               <div class="input-group">
                 <div class="input-group-addon">
                   <i class="fa fa-user">
                   </i>
                 </div>
-                <input id="Name (Full name)" [(ngModel)]="user.last_name" name="last_name" type="text" placeholder="Last name"
+                <input id="Name (Full name)" [(ngModel)]="user.last_name" name="last_name" type="text" i18n-placeholder placeholder="Last name"
                   class="form-control input-md">
               </div>
             </div>
@@ -46,11 +46,8 @@
         <div class="form-group">
           <label class="col-md-4 control-label"></label>
           <div class="col-md-4">
-            <a (click)="save()"  class="btn btn-success">
-              <!-- span class="glyphicon glyphicon-thumbs-up"></span --> Submit</a>
-            <a (click)="reset()" class="btn btn-danger" value="">
-              <!-- span class="glyphicon glyphicon-remove-sign"></span --> Reset</a>
-
+            <a (click)="save()"  class="btn btn-success" i18n>Save</a>
+            <a (click)="reset()" class="btn btn-danger" i18n>Reset</a>
           </div>
         </div>
       </form>
