@@ -1,0 +1,12 @@
+<div *ngIf="workspace">
+<legend i18n>Edit {{workspace.name}} workspace</legend>
+<h4 i18n>Field groups</h4>
+<accordion>
+    <accordion-group *ngFor="let group of workspace.field_groups" heading="{{group.name}}" (isOpenChange)="openOrCloseGroup($event, group)">
+        <ul>
+            <li *ngFor="let field of group.fields">{{field.name}}</li>
+        </ul>
+    </accordion-group>
+  </accordion>
+<a routerLink="..">Back</a>
+</div>

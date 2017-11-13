@@ -8,6 +8,7 @@ from mongoengine import connect
 from flask import Flask
 
 from server.rest_api.workspace import WorkspacesAPI, WorkspaceAPI
+from server.rest_api.field_group import WorkspaceFieldGroupsAPI
 from server.rest_api.authentification import LoginAPI
 from server.rest_api.user import UserAPI
 
@@ -31,6 +32,7 @@ class ProsperCR(Flask):
         self.api_.add_resource(ServerInfoAPI, '/api')
         self.api_.add_resource(WorkspacesAPI, '/api/workspaces')
         self.api_.add_resource(WorkspaceAPI, '/api/workspaces/<workspace_id>')
+        self.api_.add_resource(WorkspaceFieldGroupsAPI, '/api/workspaces/<workspace_id>/field-groups')
         self.api_.add_resource(LoginAPI, '/api/login')
         self.api_.add_resource(UserAPI, '/api/user')
 

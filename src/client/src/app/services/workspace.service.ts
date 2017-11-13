@@ -6,10 +6,8 @@ import 'rxjs/add/operator/map';
 import { AuthenticatedService } from './authenticated-service';
 import { AuthentificationService } from './authentification.service';
 
-export interface Workspace {
-  name: string;
-  id: string;
-}
+import { Workspace } from './data-model';
+export { Workspace } from './data-model';
 
 @Injectable()
 export class WorkspaceService extends AuthenticatedService {
@@ -27,5 +25,7 @@ export class WorkspaceService extends AuthenticatedService {
   addWorkspace(name: string): Observable<Workspace> {
     return this.http.post(this.getFullUrl('workspaces'), { name: name }, { headers: this.createHeaders() }).map(workspace => workspace.json());
   }
-
+  getWorkspace(id: string): Observable<Workspace> {
+    return this.http.get(this.getFullUrl('workspaces', id), { headers: this.createHeaders() }).map(workspace => workspace.json());
+  }
 }

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { WorkspaceComponent } from './workspace.component';
 import { WorkspaceListComponent }       from './workspace-list/workspace-list.component';
+import { WorkspaceEditionComponent }       from './workspace-edition/workspace-edition.component';
 /*import { CrisisCenterComponent }     from './crisis-center.component';
 import { CrisisDetailComponent }     from './crisis-detail.component';*/
 
@@ -25,6 +26,10 @@ const workspaceRoutes: Routes = [
             component: CrisisCenterHomeComponent
           }
         ]*/
+      },
+      {
+        path:':id',
+        component: WorkspaceEditionComponent
       }
     ]
   }
