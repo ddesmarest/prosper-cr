@@ -2,10 +2,20 @@
   <!-- navbar-fixed-top -->
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
+    <!--
     <div class="navbar-header">
-      <a routerLink="/welcome" routerLinkActive="active"  class="navbar-brand">Proper-CR</a>
+      <a routerLink="/welcome" routerLinkActive="active" class="navbar-brand">Proper-CR</a>
     </div>
-
+    -->
+    <div *ngIf="currentWorkspace" class="navbar-form btn-group" dropdown>
+      <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle">{{currentWorkspace.name}} <span class="caret"></span>
+      </button>
+      <ul *dropdownMenu class="dropdown-menu" role="menu">
+        <li *ngFor="let workspace of workspaces" role="menuitem"><a class="dropdown-item" (click)="selectWorkspace(workspace)">{{workspace.name}}</a></li>
+        <li role="separator" class="divider"></li>
+        <li role="menuitem"><a routerLink="/workspace" routerLinkActive="active" i18n>Manage</a></li>
+      </ul>
+    </div>
     <form class="navbar-form navbar-right">
       <button (click)="logout()" type="button" class="btn btn-default">
         <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>

@@ -1,0 +1,43 @@
+<ul class="list-group">
+  <li *ngFor="let workspace of workspaces" class="list-group-item">{{workspace.name}}
+    <div class="btn-group  my-list pull-right">
+      <button (click)="deleteWorkspace(workspace, confirmdeletion)" type="button" class="btn btn-danger  btn-sm">Delete</button>
+    </div>
+  </li>
+</ul>
+<div class="btn-group  my-list pull-right">
+  <button (click)="add(newworkspace)" type="button" class="btn btn-default" i18n>New workspace</button>
+</div>
+<!-- Modal dialog for deletion -->
+<ng-template #confirmdeletion>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left" i18n>Delete a workspace</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="hideDeletionConfirm()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body text-center">
+    <p *ngIf="deletionCandidate">Do you want to delete {{deletionCandidate.name}}?</p>
+    <hr>
+    <button type="button" class="btn btn-default" (click)="confirmDeletion()">Yes</button>
+    <button type="button" class="btn btn-primary" (click)="hideDeletionConfirm()">No</button>
+  </div>
+</ng-template>
+<!-- Modal dialog for creation -->
+<ng-template #newworkspace>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left" i18n>Create a new workspace</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="hideCreationDialog()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="input-group">
+      <label>Name:</label>
+      <input [(ngModel)]="newWorkspaceName" type="text" class="form-control" placeholder="Workspace name">
+    </div>
+    <hr>
+    <button type="button" class="btn btn-default" (click)="confirmAdd()">Create</button>
+    <button type="button" class="btn btn-primary" (click)="hideCreationDialog()">Cancel</button>
+  </div>
+</ng-template>
