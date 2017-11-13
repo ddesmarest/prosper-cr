@@ -47,7 +47,7 @@ class WorkspaceAPI(Resource):
         Returns a workspace
         """
         parser = reqparse.RequestParser()
-        parser.add_argument('recursive',type=bool,default=False)
+        parser.add_argument('recursive', type=bool, default=False)
         args = parser.parse_args()
         try:
             workspace = Workspace.objects(users=g.user, id=workspace_id)[0]
@@ -74,4 +74,15 @@ class WorkspaceAPI(Resource):
             return workspace.to_dict(False)
         except Exception as e:
             return create_error_data('Workspace ' + workspace_id + ' for user ' + g.user.email + 'cannot be updated', e), 400
-            
+
+    @AUTH.login_required
+    def delete(self, workspace_id):
+        """
+        Delete a workspace
+        """
+        try:
+            workspace = Workspace.objects(users=g.user, id=workspace_id)[0]
+            workspace.delete()
+            return {}, 204
+        except Exception as e:
+            return create_error_data('Workspace ' + workspace_id + ' for user ' + g.user.email + 'cannot be deleted', e), 400

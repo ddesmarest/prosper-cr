@@ -53,7 +53,8 @@ class BaseTestCase(object):
         self.drop_db()
 
     def create_users(self):
-        User(email=self.USER_EMAIL, first_name=self.USER_FIRST_NAME, last_name=self.USER_LAST_NAME).set_password(self.USER_PASSWORD).save()
+        User(email=self.USER_EMAIL, first_name=self.USER_FIRST_NAME,
+             last_name=self.USER_LAST_NAME).set_password(self.USER_PASSWORD).save()
         User(email='user2@testdomain.org').set_password('test2').save()
 
     def create_workspaces(self):
@@ -121,6 +122,12 @@ class BaseTestCase(object):
             kwargs['content_type'] = 'application/json'
             del kwargs['data_dict']
         return self.app.put(self.get_full_url(url_tail), *arg, **kwargs)
+
+    def delete(self, url_tail, *arg, **kwargs):
+        """Return response to the HTTP DELET method
+        """
+        kwargs = self.add_login_header(**kwargs)
+        return self.app.delete(self.get_full_url(url_tail), *arg, **kwargs)
 
     def login(self):
         """Login using the test USER_MAIL/USER_PASSWORD and

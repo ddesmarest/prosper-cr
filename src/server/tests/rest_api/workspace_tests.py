@@ -75,4 +75,32 @@ class WorkspaceAPITests(BaseTestCase, unittest.TestCase):
         self.logout()
         response = self.get('/workspaces',str(workspace.id))
         self.assertEquals('401 UNAUTHORIZED', response.status)
+
+    def test_delete(self):
+        """
+        * Test DELELE /workspaces/<workspace_id>
+        """
+        response = self.get('/workspaces/12315')
+        self.assertEquals('401 UNAUTHORIZED', response.status)
+        self.login()
+        response = self.get('/workspaces/12315')
+        self.assertEquals('400 BAD REQUEST', response.status)
+        data = json.loads(response.data)
+        self.assertNotEquals('', data['message'])
+        users = User.objects(id=self.login_user['id'])
+        self.assertEquals(1, len(users))
+        workspaces = Workspace.objects(users=users[0])
+        self.assertEquals(1, len(workspaces))
+        workspace = workspaces[0]
+        response = self.delete('/workspaces/'+ str(workspace.id))
+        self.assertEquals('204 NO CONTENT', response.status)
+        self.assertEquals(0, len(response.data))
+        workspaces = Workspace.objects(users=users[0])
+        self.assertEquals(0, len(workspaces))        
+        response = self.delete('/workspaces/'+ str(workspace.id))
+        self.assertEquals('400 BAD REQUEST', response.status)
+        self.logout()
+        response = self.delete('/workspaces/'+str(workspace.id))
+        self.assertEquals('401 UNAUTHORIZED', response.status)
+
         
